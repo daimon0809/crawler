@@ -63,6 +63,11 @@
             <artifactId>mybatis</artifactId>
             <version>3.5.6</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.22</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -126,9 +131,10 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.3.1</version>
                 <configuration>
-                    <url>jdbc:h2:file://G:\h2SQL\daimon\news</url>
-                    <user>daimon</user>
-                    <password>daimon</password>
+                    <!--<url>jdbc:h2:file://G:\h2SQL\daimon\news</url>-->
+                    <url>jdbc:mysql://localhost:3306/news?characterEncoding=utf-8</url>
+                    <user>root</user>
+                    <password>qwer1234</password>
                 </configuration>
                 <dependencies>
                     <dependency>

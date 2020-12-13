@@ -14,32 +14,37 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class Crawler {
+public class Crawler extends Thread {
 
-    public static void main(String[] args) throws IOException, SQLException {
-        new Crawler().run();
+    private CrawlerDao crawlerDao;
+
+    public Crawler(CrawlerDao crawlerDao) {
+        this.crawlerDao = crawlerDao;
     }
 
-    private CrawlerDao crawlerDao = new MyBatisCrawlerDaoImpl();
+    @Override
+    public void run() {
+        try {
+            String link;
+            while ((link = crawlerDao.getNextLinkAndDelete()) != null) {
+                if (crawlerDao.isLinkProcessed(link)) {
+                    continue;
+                }
 
-    public void run() throws IOException, SQLException {
-        String link;
-        while ((link = crawlerDao.getNextLinkAndDelete()) != null) {
-            if (crawlerDao.isLinkProcessed(link)) {
-                continue;
+                // 只关注news，sina的，排除登录页面
+                if (isNeedLink(link)) {
+                    System.out.println(link);
+                    Document doc = httpGetAndParseHtml(link);
+
+                    parseUrlsFromPageAndStoreIntoDatabase(doc);
+
+                    storeIntoDataBaseIfItIsNewsPage(doc, link);
+
+                    crawlerDao.insertProcessedLink(link);
+                }
             }
-
-            // 只关注news，sina的，排除登录页面
-            if (isNeedLink(link)) {
-                System.out.println(link);
-                Document doc = httpGetAndParseHtml(link);
-
-                parseUrlsFromPageAndStoreIntoDatabase(doc);
-
-                storeIntoDataBaseIfItIsNewsPage(doc, link);
-
-                crawlerDao.insertProcessedLink(link);
-            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

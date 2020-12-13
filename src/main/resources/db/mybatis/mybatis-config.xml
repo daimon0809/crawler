@@ -7,10 +7,11 @@
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-                <property name="driver" value="org.h2.Driver"/>
-                <property name="url" value="jdbc:h2:file://G:\h2SQL\daimon\news"/>
-                <property name="username" value="daimon"/>
-                <property name="password" value="daimon"/>
+                <!--<property name="driver" value="org.h2.Driver"/>-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/news?characterEncoding=utf-8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="qwer1234"/>
             </dataSource>
         </environment>
     </environments>
